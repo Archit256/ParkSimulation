@@ -1,6 +1,6 @@
 package cycling;
 
 public class Clock {
-	float t=0;
+	public static float t=0;
 	
 }

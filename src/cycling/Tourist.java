@@ -6,6 +6,7 @@ public class Tourist {
 	int touristID;
 	StationID currentStationID;
 	StationID initialStationID;
+	boolean hasRentedABicycle;
 	double bicycleSpeed;
 	double waitingTime;
 	
@@ -14,5 +15,6 @@ public class Tourist {
 	Tourist(){
 		stationsVisited = new ArrayList<StationID>();
 		bicycleSpeed = 20;
+		hasRentedABicycle = false;
 	}
 }
