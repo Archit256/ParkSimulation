@@ -45,23 +45,29 @@ public class ThemePark {
 	public void touristArrival(Tourist t, Station s, double time){
 		if(t.hasRentedABicycle)
 		{
-			leaveABicycle(s,t,time);
+			s.touristArrival(t, time); // arrival process to leave a bike kicked off
 		}
 		
 		if(!t.stationsVisited.contains(s.stationID))
 			{
 				t.stationsVisited.add(s.stationID);
 				time = time+30; //assuming spending 30 (mins) at the attraction
-				if(!t.stationsVisited.contains(s.nextStationID))
-				{
-				Events newEvent = new Events(EventTypes.touristArrival,t,time,s.nextStationID);
+				Events newEvent = new Events(EventTypes.touristDeparture,t,time,s.stationID);
 					synchronized(eventQueueObject)
 					{
 						SimulationEvents.eventQueue.add(newEvent);
 					}
-				}
 			}
+	}
 	
+	public void touristDeparture(Tourist t, Station s, double time){
+		if(!t.stationsVisited.contains(s.nextStationID)) // Still new stations to visit
+		{
+			if(!t.hasRentedABicycle){
+				s.touristDeparture(t, time); // rent a bicycle
+			}
+			
+		}
 		
 	}
  
@@ -74,7 +80,11 @@ public class ThemePark {
 	}
 	
 	public static void main (String [] args){
-		
+		/*
+		Tourist t = new Tourist()
+		Events newEvent = new Events(EventTypes.touristDeparture,t,time,s.stationID);
+		Events newEvent = new Events(EventTypes.touristDeparture,t,time,s.stationID);
+		Events newEvent = new Events(EventTypes.touristDeparture,t,time,s.stationID);*/
 	}
 	
 	

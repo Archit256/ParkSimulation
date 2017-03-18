@@ -25,6 +25,7 @@ public class Station {
 	}
 	
 	public void touristArrival(Tourist t, double time){
+		System.out.println("Tourist - "+t.touristID + "arrived at station "+this.stationID);
 		this.numberOfTourists.addAndGet(1);
 		if (this.docksAvailable.get()==0 || this.droppingABicycleQueue.size()>0)
 		{
@@ -37,6 +38,7 @@ public class Station {
 	}
 	
 	public void touristDeparture(Tourist t, double time){
+		System.out.println("Tourist - "+t.touristID + "departing from station "+this.stationID);
 		if (this.bicyclesAvailable.get()==0 || this.rentingABicycleQueue.size()>0)
 		{
 			this.rentingABicycleQueue.add(t);
@@ -65,8 +67,8 @@ public class Station {
 	}
 	
 	public void dropBicycle(Tourist t, double time) {
-		t.hasRentedABicycle = false;
 		this.bicycleDropped(); //bicycle has been dropped
+		t.hasRentedABicycle = false;
 	}
 	
 
