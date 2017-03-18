@@ -12,11 +12,9 @@ public class Tourist {
 	
 	ArrayList<StationID> stationsVisited;
 	
-	Tourist(int touristID, StationID arrivalStationID){
+	Tourist(){
 		stationsVisited = new ArrayList<StationID>();
-		bicycleSpeed = 20;
+		bicycleSpeed = 20; // Initialized to 20
 		hasRentedABicycle = false;
-		this.touristID = touristID;
-		this.currentStationID = arrivalStationID;
 	}
 }
