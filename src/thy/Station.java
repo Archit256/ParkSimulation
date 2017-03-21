@@ -45,7 +45,7 @@ public class Station {
 			
 			// One dock will be available
 			// So other tourist can drop the bicycle and ARRIVE at the current station
-			if(dropQueue.size() > 0) {
+			if(docksAvailable.get() > 0 && dropQueue.size() > 0) {
 				Tourist other = dropQueue.remove();
 				other.endQueue(currentTime); // Conclude the waiting time
 				dropBicycle();
@@ -71,7 +71,7 @@ public class Station {
 			
 			// One bicycle will be available
 			// So other tourist can rent the bicycle, ride and DROP at the next station
-			if(rentQueue.size() > 0) {
+			if(docksAvailable.get() < DOCKS_MAX && rentQueue.size() > 0) {
 				Tourist other = rentQueue.remove();
 				other.endQueue(currentTime); // Conclude the waiting time
 				rentBicycle();
