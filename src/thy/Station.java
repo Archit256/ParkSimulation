@@ -11,7 +11,10 @@ public class Station {
 	Station nextStation;
 	double distanceToNextDestination;
 	int BICYCLES_MAX, DOCKS_MAX;
-	AtomicInteger bicyclesAvailable, docksAvailable;
+	AtomicInteger docksAvailable; // Init: DOCKS_MAX - BICYCLES_MAX (hence initially DOCKS_MAX > BICYCLES_MAX)
+								  // docksAvailable ranging from 0 - DOCKS_MAX
+								  // docksAvailable == DOCKS_MAX means there is no bicycle to rent
+								  // docksAvailable == 0 means there is no space to drop the bicycle
 
 	int numberOfTourists;
 	ConcurrentLinkedQueue<Tourist> rentQueue;
@@ -23,9 +26,8 @@ public class Station {
 		this.id = id;
 		
 		this.BICYCLES_MAX = noBicycles;
-		this.bicyclesAvailable = new AtomicInteger(noBicycles);
 		this.DOCKS_MAX = noDocks;
-		this.docksAvailable = new AtomicInteger(noDocks);
+		this.docksAvailable = new AtomicInteger(DOCKS_MAX - BICYCLES_MAX);
 		
 		this.distanceToNextDestination = distance;
 		this.numberOfTourists = 0; // Total no of tourists arrives
@@ -33,12 +35,11 @@ public class Station {
 		this.dropQueue = new ConcurrentLinkedQueue<Tourist>();
 	}
 
-	boolean requestBicycle(Tourist tourist, double currentTime) {
-		// if(id == StationID.A) System.out.println("bicyclesAvailable: " + bicyclesAvailable + ", docksAvailable: " + docksAvailable);
+	synchronized boolean requestBicycle(Tourist tourist, double currentTime) {
 		// To keep track no of tourist at each station
 		this.numberOfTourists++;
 		
-		if( bicyclesAvailable.get() > 0 && rentQueue.size() == 0){
+		if( docksAvailable.get() < DOCKS_MAX && rentQueue.size() == 0){
 			// Rent a bicycle
 			rentBicycle();
 			
@@ -49,6 +50,7 @@ public class Station {
 				other.endQueue(currentTime); // Conclude the waiting time
 				dropBicycle();
 				
+				// Enter the attraction immediately
 				park.addEvent(new Event(this, other, EventType.ENTER, currentTime));
 			}
 			return true;
@@ -62,8 +64,7 @@ public class Station {
 		}
 	}
 	
-	public boolean requestDock(Tourist tourist, double currentTime) {
-		// if(id == StationID.A) System.out.println("bicyclesAvailable: " + bicyclesAvailable + ", docksAvailable: " + docksAvailable);
+	synchronized boolean requestDock(Tourist tourist, double currentTime) {
 		if( docksAvailable.get() > 0 && dropQueue.size() == 0){
 			// Drop the bicycle
 			dropBicycle();
@@ -75,7 +76,9 @@ public class Station {
 				other.endQueue(currentTime); // Conclude the waiting time
 				rentBicycle();
 				
+				// Ride
 				double travelTime = this.distanceToNextDestination / tourist.speed;
+				// DROP
 				park.addEvent(new Event(this.nextStation, other, EventType.DROP, currentTime + travelTime));
 			}
 			return true;
@@ -89,13 +92,25 @@ public class Station {
 		}
 	}
 	private void rentBicycle() {
-		if(this.docksAvailable.get() < DOCKS_MAX) this.docksAvailable.incrementAndGet();
-		this.bicyclesAvailable.decrementAndGet();
+		this.docksAvailable.incrementAndGet();
+		
+		// No. of docks at each station cannot over the DOCKS_MAX
+		if(docksAvailable.get() < 0 || docksAvailable.get() > DOCKS_MAX) {
+			System.out.println("ERROR docksAvailable: " + docksAvailable);
+		}
+		// Debug
+		if(id == StationID.A) System.out.println("Station A docksAvailable: " + docksAvailable);
 	}
 
 	private void dropBicycle() {
 		this.docksAvailable.decrementAndGet();
-		this.bicyclesAvailable.incrementAndGet(); // 
+		
+		// No. of docks at each station cannot over the DOCKS_MAX
+		if(docksAvailable.get() < 0 || docksAvailable.get() > DOCKS_MAX) {
+			System.out.println("ERROR docksAvailable: " + docksAvailable);
+		}
+		// Debug
+		if(id == StationID.A) System.out.println("Station A docksAvailable: " + docksAvailable);
 	}
 	
 	public String getRentQueue() {

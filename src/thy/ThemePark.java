@@ -32,7 +32,7 @@ public class ThemePark extends Simulation{
 	 */
 	public static void main(String[] args) {
 		final double START_TIME = 0; 
-		final double END_TIME = 7200; // 24 hours = 1440 mins
+		final double END_TIME = 7200; // 5 days, 24 hours = 1440 mins
 		
 		final int NO_DOCKS = 80;
 		final int NO_BICYCLES = 80;

@@ -11,11 +11,14 @@ public class Simulation {
 	
 	public void run(double startTime, double endTime) {
 		currentTime = startTime;
+		System.out.println("Station\tTourist ID\tEvent\t\tTime\tRentQ\tDropQ");
 		while (eventQueue.size() > 0 && currentTime <= endTime) {
 			Event event = eventQueue.remove();
+			
+			display(event);
+			
 			currentTime = event.time;
 			event.process(this);
-			display(event);
 		}
 		displaySummary();
 	}
