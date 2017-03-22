@@ -48,6 +48,8 @@ public class Station {
 			if(docksAvailable.get() > 0 && dropQueue.size() > 0) {
 				Tourist other = dropQueue.remove();
 				other.endQueue(currentTime); // Conclude the waiting time
+				
+				// if(id == StationID.A) System.out.printf("Tourist %s in the dropQueue can DROP.\n", other.id);
 				dropBicycle();
 				
 				// Enter the attraction immediately
@@ -74,6 +76,8 @@ public class Station {
 			if(docksAvailable.get() < DOCKS_MAX && rentQueue.size() > 0) {
 				Tourist other = rentQueue.remove();
 				other.endQueue(currentTime); // Conclude the waiting time
+				
+				// if(id == StationID.A) System.out.printf("Tourist %s in the rentQueue can RENT.\n", other.id);
 				rentBicycle();
 				
 				// Ride
@@ -99,7 +103,7 @@ public class Station {
 			System.out.println("ERROR docksAvailable: " + docksAvailable);
 		}
 		// Debug
-		if(id == StationID.A) System.out.println("Station A docksAvailable: " + docksAvailable);
+		// if(id == StationID.A) System.out.println("Station A docksAvailable: " + docksAvailable);
 	}
 
 	private void dropBicycle() {
@@ -110,7 +114,7 @@ public class Station {
 			System.out.println("ERROR docksAvailable: " + docksAvailable);
 		}
 		// Debug
-		if(id == StationID.A) System.out.println("Station A docksAvailable: " + docksAvailable);
+		// if(id == StationID.A) System.out.println("Station A docksAvailable: " + docksAvailable);
 	}
 	
 	public String getRentQueue() {

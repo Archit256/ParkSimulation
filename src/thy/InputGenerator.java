@@ -4,6 +4,17 @@ package thy;
 import java.util.Random;
 
 public class InputGenerator {
+	private static int[] SEEDS = new int[]{4137096, 1392153, 5372198, 8332692, 5881198, 7690252, 1375543, 4800122, 4589425, 8066659,
+											6028132, 9768298, 9768298, 2709045, 1704539, 8912680, 1048157, 4539050, 7922078, 3715090,
+											9002215, 3220666, 1466796, 8909162, 5738412, 5632399, 9694794, 5273665, 6812176, 6040334};
+	/*
+	 * There is 30 pre-defined seeds.
+	 * i is the index of SEEDS
+	 */
+	private static Random random;
+	public static void initSeed(int i){
+		random = new Random(SEEDS[i]);
+	}
 	
 	private static final double MIN = 10.340;
 	private static final double MODE = 19.617738;
@@ -14,7 +25,7 @@ public class InputGenerator {
 	 */
 	static public double generateSpeed() {
 		double F = (MODE - MIN) / (MAX - MIN);
-	    double rand = Math.random();
+	    double rand = random.nextDouble();
 	    if (rand <= F) {
 	        return (MIN + Math.sqrt(rand * (MAX - MIN) * (MODE - MIN))) / 60;
 	    } else {
@@ -55,8 +66,7 @@ public class InputGenerator {
 	 *  To generate normal distribution
 	 */
 	static public double normalDistribution(double mean, double std) {
-		Random rand = new Random();
-	    return mean + std * rand.nextGaussian();
+	    return mean + std * random.nextGaussian();
 	}
 	
 	private static double INTERARRIVAL_A = 8.603771429;
@@ -84,12 +94,13 @@ public class InputGenerator {
 	 * To generate exponential distribution
 	 */
 	public static double exponentialDistribution(double mean) {
-		return - mean * Math.log(1 - Math.random());
+		return - mean * Math.log(1 - random.nextDouble());
 	}
 	
 	static public void main(String[] args) {
+		initSeed(0);
 		for(int i = 0; i<5000; i++){
-			System.out.println(generateNextArrival(StationID.A));
+			System.out.println(generateTimeSpent(StationID.A));
 		}
 	}
 }
