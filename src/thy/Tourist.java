@@ -30,7 +30,12 @@ public class Tourist {
 	}
 
 	public void calculateAverageWaitingTime() {
-		if(waitingTime.size() > 0)
-			averageWaitingTime = MathUtils.mean(waitingTime);
+		if (waitingTime.size() > 0) {
+			double sum = 0;
+			for (int i = 0; i < waitingTime.size(); i++) {
+				sum += waitingTime.get(i);
+			}
+			averageWaitingTime = sum / 6; // There is total 6 possible queue
+		}
 	}
 }
